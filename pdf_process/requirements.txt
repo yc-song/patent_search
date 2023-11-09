@@ -1,0 +1,4 @@
+pdfminer.six
+pymupdf
+frontend
+pandas
