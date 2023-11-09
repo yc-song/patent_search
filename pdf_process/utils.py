@@ -78,10 +78,10 @@ def from_pdf_to_html(pdf_path, folder_to_save):
     retstr.close()
     f.close()
     
-def from_html_to_csv(file_path, csvfile_path):
+def from_html_to_df(file_path, name):
 
     with open(file_path) as f:
-        parser = patent_HTMLParser()
+        parser = patent_HTMLParser(name)
         parser.feed(f.read())
     
     # for key, val in parser.contents.items():
@@ -94,20 +94,22 @@ def from_html_to_csv(file_path, csvfile_path):
     # print("columns: ",df.columns)
     # print(df.iloc[0, :])
     
-    if csvfile_path in os.listdir():
-        # print("cvsfile exist")
-        prev_df = pd.read_csv(csvfile_path, encoding = 'utf-8')
-        # print("prev_df:")
-        # print(prev_df)
-        # print()
-        df = pd.concat([prev_df, df], ignore_index=True)
+    return df
+    # if csvfile_path in os.listdir():
+    #     # print("cvsfile exist")
+    #     prev_df = pd.read_csv(csvfile_path, encoding = 'utf-8')
+    #     # print("prev_df:")
+    #     # print(prev_df)
+    #     # print()
+    #     df = pd.concat([prev_df, df], ignore_index=True)
     
-    df.to_csv(csvfile_path, index=False, encoding='utf-8')
+    # df.to_csv(csvfile_path, index=False, encoding='utf-8')
     
 class patent_HTMLParser(HTMLParser):
-    def __init__(self):
+    def __init__(self, name):
         HTMLParser.__init__(self)
-        self.contents = {'요약':'',
+        self.contents = {'id':name,
+                         '요약':'',
                          '대표도':'',
                          '청구범위':'',
                          '기술분야':'',
