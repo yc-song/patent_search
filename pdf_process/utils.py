@@ -124,16 +124,28 @@ class patent_HTMLParser(HTMLParser):
         self.curr_is_content = False
         self.curr_is_title = False
         self.curr_title = None
+        self.count = 0
+        self.forbid_after = 0
 
     def handle_starttag(self, tag, attrs):
+        if tag == 'br':
+            return
+        self.count +=1
         self.curr_is_title = self.is_title_determine_by_starttag(tag, attrs)
         self.curr_is_content = self.is_content_determine_by_starttag(tag, attrs)
-
+        # print(f"tag:{tag}")
+        # print(f"attrs:{attrs}")
+        
 
     def handle_data(self, data):
+        self.count +=1
+        # if self.count > 200:
+        #     raise f"self.count = {self.count}"
+        # print(data)
+        # print()
         if self.curr_is_title:
             for key in self.contents.keys():
-                if is_substring(key, data.replace(' ', '')):
+                if is_substring(key, data.replace(' ', '')) and len(key)*4 > len(data.replace(' ', '')):
                     self.curr_title = key
                     # print(f"self.curr_title: {self.curr_title}")
             else:
@@ -150,18 +162,22 @@ class patent_HTMLParser(HTMLParser):
     def is_content_determine_by_starttag(self, tag, attrs):
         """
         본문이 되기 위한 필요조건.
-        1. span tag이어야 한다.
+        1. span tag이어야 한다.(요약 항목 빼고)
         """
         is_content = True
-        if tag != 'span':
-            is_content = False
-        if len(attrs) == 0:
-            return False
-        else:
-            if len(attrs[0])==1:
+        if self.curr_title != '요약':
+            if tag != 'span' and self.curr_title != '요약':
+                is_content = False
+            if len(attrs) == 0:
                 return False
-        if 'BatangChe' not in attrs[0][1]:
-            is_content = False
+            else:
+                if len(attrs[0])==1:
+                    return False
+            if 'BatangChe' not in attrs[0][1] and self.curr_title != '요약':
+                is_content = False
+
+        # else:
+        #     if tag 
         
         return is_content
 
@@ -195,6 +211,15 @@ class patent_HTMLParser(HTMLParser):
         if '뒷면에 계속' in data:
             is_content = False
         
+        for key, val in {'특허권자':3, '발명자':7, '대리인':3, '심사관':0}.items():
+            if key in data and self.curr_title == '요약':
+                is_content = False
+                self.forbid_after = val
+        
+        if self.forbid_after != 0:
+            self.forbid_after -=1
+            is_content = False
+                
         return is_content
     
 def is_substring(a, b):

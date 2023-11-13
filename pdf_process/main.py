@@ -11,9 +11,6 @@ pdf_files = [f for f in os.listdir(resource_pdf_folderName) if f.endswith('.pdf'
 pdf_names = [s[:-4] for s in pdf_files]
 df_list = []
 
-if os.path.exists(csv_path):
-    os.remove(csv_path)
-
 for i, (name, file) in enumerate(zip(pdf_names, pdf_files)):
     image_path = os.path.join(os.getcwd(), "image", "pdf_"+name)
     html_path = os.path.join(os.getcwd(), "html", f"{name}.html")
@@ -23,8 +20,11 @@ for i, (name, file) in enumerate(zip(pdf_names, pdf_files)):
     df_list.append(df)
     print(f"processing.... {i+1}/{len(pdf_files)} is done.")
 
+if os.path.exists(csv_path):
+    os.remove(csv_path)
+
 final_df = pd.concat(df_list, ignore_index = True)
 final_df.to_csv(csv_path, index = False, encoding= 'utf-8')
 
-if os.path.exists('html'):
-    shutil.rmtree('html')
+# if os.path.exists('html'):
+#     shutil.rmtree('html')
