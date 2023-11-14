@@ -10,3 +10,4 @@
 #### image file들은 image라는 폴더에 있습니다. image/{pdf파일이름}/{이미지 이름}.png 의 형태입니다.
 
 ## 용량이 너무 커서 각각의 파일들을 깃으로 공유하기 어려울 것 같아요. 위의 설명을 읽고 직접 코드를 돌려야 할 것 같습니다.
+## Download Link: https://drive.google.com/drive/folders/1WMlY2QYlIVvBbYYNt4X7fHMJuCYXKhI5?usp=sharing
