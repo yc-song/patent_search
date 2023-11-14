@@ -2,3 +2,4 @@ pdfminer.six
 pymupdf
 frontend
 pandas
+gdown
