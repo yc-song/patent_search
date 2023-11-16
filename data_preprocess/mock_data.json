@@ -1,0 +1,487 @@
+[
+    {
+        "application_number": "1020120156759",
+        "publication_number": "",
+        "patent_number": "",
+        "drawings": [
+            {
+                "drawing_id": 1,
+                "path": "data_preprocess/image/pdf_1020120156759/p7-30.png",
+                "numbers": [
+                    "200",
+                    "300",
+                    "W",
+                    "100"
+                ],
+                "caption": []
+            },
+            {
+                "drawing_id": 2,
+                "path": "data_preprocess/image/pdf_1020120156759/p7-31.png",
+                "numbers": [
+                    "110",
+                    "120",
+                    "160",
+                    "100",
+                    "112",
+                    "162"
+                ],
+                "caption": []
+            },
+            {
+                "drawing_id": 4,
+                "path": "data_preprocess/image/pdf_1020120156759/p8-35.png",
+                "numbers": [
+                    "133",
+                    "129",
+                    "110",
+                    "145",
+                    "135",
+                    "130",
+                    "120",
+                    "127",
+                    "125",
+                    "100",
+                    "123",
+                    "140",
+                    "147",
+                    "143",
+                    "121",
+                    "137",
+                    "115"
+                ],
+                "caption": []
+            },
+            {
+                "drawing_id": 3,
+                "path": "data_preprocess/image/pdf_1020120156759/p8-6.png",
+                "numbers": [
+                    "200",
+                    "210",
+                    "222",
+                    "W",
+                    "300",
+                    "228",
+                    "214a",
+                    "310",
+                    "220",
+                    "226",
+                    "224a",
+                    "212",
+                    "320"
+                ],
+                "caption": []
+            },
+            {
+                "drawing_id": 5,
+                "path": "data_preprocess/image/pdf_1020120156759/p9-39.png",
+                "numbers": [
+                    "200",
+                    "300",
+                    "W",
+                    "100"
+                ],
+                "caption": []
+            }
+        ]
+    },
+    {
+        "application_number": "1020180014052",
+        "publication_number": "",
+        "patent_number": "",
+        "drawings": [
+            {
+                "drawing_id": 1,
+                "path": "data_preprocess/image/pdf_1020180014052/p11-43.png",
+                "numbers": [
+                    "26",
+                    "34",
+                    "28",
+                    "36",
+                    "12",
+                    "18",
+                    "10",
+                    "32",
+                    "35",
+                    "30"
+                ],
+                "caption": []
+            },
+            {
+                "drawing_id": 2,
+                "path": "data_preprocess/image/pdf_1020180014052/p11-44.png",
+                "numbers": [
+                    "24",
+                    "20",
+                    "26",
+                    "14",
+                    "12",
+                    "22",
+                    "18",
+                    "16"
+                ],
+                "caption": []
+            },
+            {
+                "drawing_id": 3,
+                "path": "data_preprocess/image/pdf_1020180014052/p11-45.png",
+                "numbers": [
+                    "24",
+                    "20",
+                    "26",
+                    "16",
+                    "22",
+                    "12",
+                    "18"
+                ],
+                "caption": []
+            },
+            {
+                "drawing_id": 4,
+                "path": "data_preprocess/image/pdf_1020180014052/p12-6.png",
+                "numbers": [
+                    "20",
+                    "29",
+                    "t",
+                    "27"
+                ],
+                "caption": []
+            },
+            {
+                "drawing_id": 5,
+                "path": "data_preprocess/image/pdf_1020180014052/p13-52.png",
+                "numbers": [
+                    "26",
+                    "34",
+                    "28",
+                    "36",
+                    "12",
+                    "18",
+                    "10",
+                    "32",
+                    "35",
+                    "30"
+                ],
+                "caption": []
+            },
+            {
+                "drawing_id": 6,
+                "path": "data_preprocess/image/pdf_1020180014052/p14-56.png",
+                "numbers": [
+                    "26",
+                    "34",
+                    "28",
+                    "36",
+                    "10",
+                    "30"
+                ],
+                "caption": []
+            },
+            {
+                "drawing_id": 7,
+                "path": "data_preprocess/image/pdf_1020180014052/p15-60.png",
+                "numbers": [
+                    "50",
+                    "46",
+                    "47",
+                    "42",
+                    "40",
+                    "44",
+                    "38",
+                    "34",
+                    "48",
+                    "28",
+                    "36",
+                    "10",
+                    "30",
+                    "45"
+                ],
+                "caption": []
+            }
+        ]
+    },
+    {
+        "application_number": "1020177009557",
+        "publication_number": "",
+        "patent_number": "",
+        "drawings": [
+            {
+                "drawing_id": 6,
+                "path": "data_preprocess/image/pdf_1020177009557/p10-44.png",
+                "numbers": [
+                    "3",
+                    "2",
+                    "17",
+                    "1",
+                    "11",
+                    "10",
+                    "4"
+                ],
+                "caption": []
+            },
+            {
+                "drawing_id": 7,
+                "path": "data_preprocess/image/pdf_1020177009557/p10-45.png",
+                "numbers": [
+                    "10"
+                ],
+                "caption": []
+            },
+            {
+                "drawing_id": 8,
+                "path": "data_preprocess/image/pdf_1020177009557/p10-46.png",
+                "numbers": [
+                    "10"
+                ],
+                "caption": []
+            },
+            {
+                "drawing_id": 9,
+                "path": "data_preprocess/image/pdf_1020177009557/p10-47.png",
+                "numbers": [
+                    "3",
+                    "2",
+                    "1",
+                    "11",
+                    "10",
+                    "4",
+                    "5"
+                ],
+                "caption": []
+            },
+            {
+                "drawing_id": 10,
+                "path": "data_preprocess/image/pdf_1020177009557/p11-51.png",
+                "numbers": [
+                    "1",
+                    "13",
+                    "12",
+                    "11"
+                ],
+                "caption": []
+            },
+            {
+                "drawing_id": 11,
+                "path": "data_preprocess/image/pdf_1020177009557/p11-52.png",
+                "numbers": [
+                    "1",
+                    "13",
+                    "12",
+                    "11"
+                ],
+                "caption": []
+            },
+            {
+                "drawing_id": 12,
+                "path": "data_preprocess/image/pdf_1020177009557/p11-53.png",
+                "numbers": [
+                    "14",
+                    "17"
+                ],
+                "caption": []
+            },
+            {
+                "drawing_id": 13,
+                "path": "data_preprocess/image/pdf_1020177009557/p11-54.png",
+                "numbers": [
+                    "15",
+                    "17"
+                ],
+                "caption": []
+            },
+            {
+                "drawing_id": 14,
+                "path": "data_preprocess/image/pdf_1020177009557/p12-58.png",
+                "numbers": [
+                    "11",
+                    "6"
+                ],
+                "caption": []
+            },
+            {
+                "drawing_id": 15,
+                "path": "data_preprocess/image/pdf_1020177009557/p12-59.png",
+                "numbers": [
+                    "3",
+                    "2",
+                    "1",
+                    "11",
+                    "18",
+                    "10",
+                    "4",
+                    "5"
+                ],
+                "caption": []
+            },
+            {
+                "drawing_id": 16,
+                "path": "data_preprocess/image/pdf_1020177009557/p12-60.png",
+                "numbers": [
+                    "3",
+                    "2",
+                    "1",
+                    "11",
+                    "18",
+                    "10",
+                    "4",
+                    "5"
+                ],
+                "caption": []
+            },
+            {
+                "drawing_id": 17,
+                "path": "data_preprocess/image/pdf_1020177009557/p12-61.png",
+                "numbers": [
+                    "3",
+                    "2",
+                    "1",
+                    "11",
+                    "10",
+                    "4",
+                    "5"
+                ],
+                "caption": []
+            },
+            {
+                "drawing_id": 18,
+                "path": "data_preprocess/image/pdf_1020177009557/p13-65.png",
+                "numbers": [
+                    "3",
+                    "2",
+                    "1",
+                    "11",
+                    "18",
+                    "10",
+                    "4",
+                    "5"
+                ],
+                "caption": []
+            },
+            {
+                "drawing_id": 19,
+                "path": "data_preprocess/image/pdf_1020177009557/p13-66.png",
+                "numbers": [
+                    "3",
+                    "18",
+                    "10"
+                ],
+                "caption": []
+            },
+            {
+                "drawing_id": 20,
+                "path": "data_preprocess/image/pdf_1020177009557/p13-67.png",
+                "numbers": [
+                    "3",
+                    "2",
+                    "1",
+                    "11",
+                    "10",
+                    "4",
+                    "5"
+                ],
+                "caption": []
+            },
+            {
+                "drawing_id": 1,
+                "path": "data_preprocess/image/pdf_1020177009557/p8-6.png",
+                "numbers": [
+                    "3",
+                    "2",
+                    "1",
+                    "11",
+                    "10",
+                    "4",
+                    "5"
+                ],
+                "caption": []
+            },
+            {
+                "drawing_id": 2,
+                "path": "data_preprocess/image/pdf_1020177009557/p9-36.png",
+                "numbers": [
+                    "3",
+                    "2",
+                    "17",
+                    "1",
+                    "11",
+                    "10",
+                    "4"
+                ],
+                "caption": []
+            },
+            {
+                "drawing_id": 3,
+                "path": "data_preprocess/image/pdf_1020177009557/p9-37.png",
+                "numbers": [
+                    ""
+                ],
+                "caption": []
+            },
+            {
+                "drawing_id": 4,
+                "path": "data_preprocess/image/pdf_1020177009557/p9-38.png",
+                "numbers": [
+                    "3",
+                    "2",
+                    "1",
+                    "11",
+                    "10",
+                    "4",
+                    "5"
+                ],
+                "caption": []
+            },
+            {
+                "drawing_id": 5,
+                "path": "data_preprocess/image/pdf_1020177009557/p9-39.png",
+                "numbers": [
+                    "8",
+                    "6",
+                    "16",
+                    "7",
+                    "10"
+                ],
+                "caption": []
+            }
+        ]
+    },
+    {
+        "application_number": "1020050097605",
+        "publication_number": "",
+        "patent_number": "",
+        "drawings": [
+            {
+                "drawing_id": 1,
+                "path": "data_preprocess/image/pdf_1020050097605/p4-41.png",
+                "numbers": [
+                    "11",
+                    "19",
+                    "16"
+                ],
+                "caption": []
+            },
+            {
+                "drawing_id": 2,
+                "path": "data_preprocess/image/pdf_1020050097605/p4-42.png",
+                "numbers": [
+                    "120",
+                    "110",
+                    "10"
+                ],
+                "caption": []
+            },
+            {
+                "drawing_id": 3,
+                "path": "data_preprocess/image/pdf_1020050097605/p5-47.png",
+                "numbers": [
+                    "40",
+                    "20",
+                    "100",
+                    "10",
+                    "30"
+                ],
+                "caption": []
+            }
+        ]
+    }
+]
