@@ -168,5 +168,7 @@ cython_debug/
 # Data directories
 pdf_process/image
 pdf_process/pdf_sources
-pdf_process/*.csv
+# pdf_process/*.csv
 html/
+# **/*.xlsx
+**/*.csv
