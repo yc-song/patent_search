@@ -11,6 +11,9 @@ openpyxl
 transformers
 tiktoken # tokenizer by OpenAI -> for chunking
 faiss-cpu
+sentence_transformers
+torch
+InstructorEmbedding
 
 # aiofiles==23.2.1
 # annotated-types==0.6.0
