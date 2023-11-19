@@ -14,6 +14,9 @@ faiss-cpu
 sentence_transformers
 torch
 InstructorEmbedding
+Flask
+streamlit
+
 
 # aiofiles==23.2.1
 # annotated-types==0.6.0
@@ -128,3 +131,5 @@ InstructorEmbedding
 # wheel==0.41.3
 # XlsxWriter==3.1.9
 # zipp @ file:///home/conda/feedstock_root/build_artifacts/zipp_1695255097490/work
+# Flask==2.3.2
+# streamlit==1.28.2
