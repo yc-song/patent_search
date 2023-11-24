@@ -7,7 +7,7 @@ from datetime import datetime
 
 import os  # 경로 탐색
 
-
+url = "http://localhost:5000"
 # 파일 업로드 함수
 # 디렉토리 이름, 파일을 주면 해당 디렉토리에 파일을 저장해주는 함수
 def save_uploaded_file(directory, file):
@@ -55,7 +55,7 @@ def main():
 
             save_uploaded_file('image', img_file)
 
-        output = requests.get("http://localhost:5000/api/data",
+        output = requests.get(f"{url}/api/data",
                               params={"image_name": image_name, "query": query}).json()
         st.header("Results")
         for output in output['out']:
