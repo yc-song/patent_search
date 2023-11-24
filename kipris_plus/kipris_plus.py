@@ -1,6 +1,7 @@
 import requests
 import xmltodict
 import pandas as pd
+import requests
 import time
 
 def get_response(url):
@@ -26,8 +27,10 @@ def main():
     patent_number = 1020050050026
     url = 'http://plus.kipris.or.kr/kipo-api/kipi/patUtiModInfoSearchSevice/getPubFullTextInfoSearch?applicationNumber={}&ServiceKey={}'.format(patent_number, api_key)
     content = get_response(url)
-    result = extract_items_from_body(content)
-    print(result)
+    result_link = extract_items_from_body(content)
+    pdf_response = requests.get(result_link)
+    with open("./pdf/{}.pdf".format(patent_number), "wb") as pdf_file:
+        pdf_file.write(pdf_response.content)
 
 
 if __name__ == '__main__':
