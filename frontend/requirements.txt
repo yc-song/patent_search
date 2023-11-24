@@ -1,3 +1,4 @@
 Flask
 streamlit
 streamlit-chat
+watchdog
