@@ -7,7 +7,7 @@ from flask import Flask, render_template, request, redirect, session, jsonify
 import os.path
 
 app = Flask(__name__)
-openai.api_key = "api here"
+openai.api_key = "your api here"
 
 
 @app.route("/api/data", methods=['GET'])
