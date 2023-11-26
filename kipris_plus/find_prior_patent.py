@@ -6,7 +6,6 @@ def main():
     file_path = '../kipris_process/prior_arts_formatted.csv'
     out_file_path = '../kipris_process/prior_arts_formatted.csv'
 
-    # CSV 파일 불러오기
     df = pd.read_csv(file_path)
 
     # 일련번호 컬럼이 비어있고 특허유형 컬럼 형식이 잘못된 경우 수정
