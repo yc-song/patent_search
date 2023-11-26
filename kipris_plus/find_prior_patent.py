@@ -23,6 +23,7 @@ def main():
             df.at[index, '특허유형'] = alpha_part + str(row['특허유형'])
     df['일련번호'] = df['일련번호'].str.replace('-', '')
     df['일련번호'] = df['일련번호'].apply(lambda x: f'{x}0000' if x.isdigit() and len(x) == 9 else x)
+    df = df[df['일련번호'].str.len() == 13]
     # 수정된 DataFrame을 CSV 파일로 저장
     df.to_csv('prior_arts_formatted.csv', index=False)
 
