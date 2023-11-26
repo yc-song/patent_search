@@ -11,3 +11,5 @@ google-cloud-storage
 # next, authorize gcloud cli or do the following : # https://cloud.google.com/docs/authentication/provide-credentials-adc#local-dev
 # $gcloud auth login
 # $gcloud auth application-default login 
+pandas
+tqdm

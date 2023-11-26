@@ -172,3 +172,5 @@ pdf_process/pdf_sources
 html/
 # **/*.xlsx
 **/*.csv
+# API KEY
+backend/keys.json
