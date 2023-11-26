@@ -11,6 +11,7 @@ def get_response(url):
             time.sleep(1)
             break
         except:
+            print("error!!")
             time.sleep(60*15)
     content = response.text
     content = xmltodict.parse(content)['response']
