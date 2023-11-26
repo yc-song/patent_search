@@ -104,7 +104,7 @@ if __name__ == "__main__":
     already_crawled_list = os.listdir('data_collection/crawled_images')
     found_count = 0
     
-    my_num = 1  # CHANGE THIS LINE : change it to number next to your name # hyeryung: 0, jong: 1, mooho: 2, moonwon: 3, emad: 4
+    my_num = 1  # CHANGE THIS LINE : change it to number next to your name # hyeryung: 0, jong: 1, mooho: 2, moonwon: 3
     num_len = 478
     start_index = my_num * num_len
     end_index = (my_num + 1) * num_len
