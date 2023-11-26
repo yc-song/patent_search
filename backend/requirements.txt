@@ -1,3 +1,6 @@
 openai==0.28
 Flask
 watchdog
+langchain
+langchain_experimental
+tabulate
