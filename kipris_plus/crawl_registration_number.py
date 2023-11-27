@@ -66,6 +66,8 @@ if __name__ == "__main__":
     os.chdir('/Users/hayley/Documents/p4ds/patent_search') #CHANGE THIS LINE
     # os.chdir('/home/hyeryung/patent_search')
     
+    os.makedirs('kipris_plus/outputs',exist_ok=True)
+    
     ## read data
     patent_data = pd.read_csv('kipris_plus/prior_arts_formatted.csv')
     # patent_data = patent_data.loc[patent_data['exists']==0].copy()
@@ -77,15 +79,15 @@ if __name__ == "__main__":
     test_driver = webdriver.Chrome(options=options)#'/path/to/driver'  # Optional argument, if not specified will search path.
     
     
-    if os.path.exists('kipris_plus/output.txt'):
-        with open('kipris_plus/output.txt', 'r') as f:
+    if os.path.exists('kipris_plus/outputs/output.txt'):
+        with open('kipris_plus/outputs/output.txt', 'r') as f:
             already_crawled_data = f.readlines()
         print("file already exists...")
         start_index = len(already_crawled_data)
-        f = open('kipris_plus/output.txt', 'a')
+        f = open('kipris_plus/outputs/output.txt', 'a')
     else:
         start_index = 0
-        f = open('kipris_plus/output.txt', 'w')
+        f = open('kipris_plus/outputs/output.txt', 'w')
     
     print(f"start_index: {start_index}")
     try:

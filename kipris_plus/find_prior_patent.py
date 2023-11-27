@@ -1,5 +1,6 @@
 import pandas as pd
 import io
+import os
 
 
 def main():
@@ -43,7 +44,8 @@ def main():
     # df.loc[df['공개번호'].astype(str).isin(already_downloaded_data['공개번호'].tolist()),'exists']=1
     
     # 수정된 DataFrame을 CSV 파일로 저장
-    df.to_csv('prior_arts_formatted.csv', index=False)
+    os.makedirs('kipris_plus/outputs',exist_ok=True)
+    df.to_csv('outputs/prior_arts_formatted.csv', index=False)
 
 
 if __name__ == '__main__':
