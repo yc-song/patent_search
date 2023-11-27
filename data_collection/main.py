@@ -92,23 +92,20 @@ if __name__ == "__main__":
     os.chdir('/Users/hayley/Documents/p4ds/patent_search') #CHANGE THIS LINE
     
     ## read data
-    patent_data = pd.read_csv('data_preprocess/extracted_data_formatted_merged.csv', index_col=0, dtype=str)
+    patent_data = pd.read_csv('data_collection/extracted_data_formatted.csv', index_col=0, dtype=str) ## CHANGE THIS LINE
+    patent_data = patent_data.loc[~patent_data['등록번호'].isna(),:].copy()
     patent_list = patent_data['등록번호'].tolist()
     print(len(patent_list))
     
     options = Options()
-    options.add_argument("--headless=new")
+    # options.add_argument("--headless=new")
     test_driver = webdriver.Chrome(options=options)#'/path/to/driver'  # Optional argument, if not specified will search path.
     
-    
+    os.makedirs('data_collection/crawled_images', exist_ok=True)
     already_crawled_list = os.listdir('data_collection/crawled_images')
     found_count = 0
     
-    my_num = 1  # CHANGE THIS LINE : change it to number next to your name # hyeryung: 0, jong: 1, mooho: 2, moonwon: 3
-    num_len = 478
-    start_index = my_num * num_len
-    end_index = (my_num + 1) * num_len
-    for patent_number in tqdm(patent_list[start_index:end_index]):
+    for patent_number in tqdm(patent_list):
         
         if patent_number[:9] in already_crawled_list:
             found_count += 1
