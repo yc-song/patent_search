@@ -40,20 +40,30 @@ def aggregate_chunks(chunk_dicts, model_name=""):
 #     return np.count_nonzero(rank<=k)
 import numpy as np
 def calculate_recall(_docs_with_score, _labels):
-    # print(_docs_with_score)
-    _docs = [x[0].metadata['application_number'] for x in _docs_with_score]
-    print(set(_docs))
-    _yn = [1 if x in _labels else 0 for x in _docs]
-    print(_yn)
-    _scores = np.array([x[1] for x in _docs_with_score])
+    _docs = [x[0].metadata['application_number'] for x in _docs_with_score] # list of application numbers with length same as docs_with_score
+    _yn = [1 if x in _labels else 0 for x in _docs] # list of 1,0 with length same as docs_with_score
+    _scores = np.array([x[1] for x in _docs_with_score]) # array of shape (length docs_with_score,) of similarity scores
     
     idx_array = rankdata(_scores, method='max')
-    idx_array_gold = idx_array[np.where(np.array(_yn)==1)[0]]
+    idx_array_gold = idx_array[np.where(np.array(_yn)==1)[0]] # only get ranks of indices where application number is in the labels (gold prior arts)
     if len(idx_array_gold) == 0:
         return 0.
     else:
-        # rank = np.take_along_axis(idx_array, _labels[:,None], axis=1)
         return len(idx_array_gold) / len(_docs_with_score)
+    
+def calculate_rr(_docs_with_score, _labels):
+    
+    _docs = [x[0].metadata['application_number'] for x in _docs_with_score] # list of application numbers with length same as docs_with_score
+    _yn = [1 if x in _labels else 0 for x in _docs] # list of 1,0 with length same as docs_with_score
+    _scores = np.array([x[1] for x in _docs_with_score]) # array of shape (length docs_with_score,) of similarity scores
+    
+    idx_array = rankdata(_scores, method='max')
+    idx_array_gold = idx_array[np.where(np.array(_yn)==1)[0]] # only get ranks of indices where application number is in the labels (gold prior arts)
+    if len(idx_array_gold) == 0:
+        return np.nan
+    else:
+        return 1 / min(idx_array_gold)
+    
 
 def main(args):
     pd.set_option("display.max_columns", 999)
@@ -61,7 +71,6 @@ def main(args):
     # declare tokenizer 
     tokenizer = AutoTokenizer.from_pretrained("intfloat/multilingual-e5-large", use_fast=True, max_length=1024)
     # Document Embeddings
-    print("tokenizer read.")
     try: 
         
         # Embed documents
@@ -74,12 +83,9 @@ def main(args):
             encode_kwargs=encode_kwargs,
         )
         # if index is stored beforehand, load it.
-        print(f"reading vectorstore from {args.save_path}")
         vectorstore = FAISS.load_local(args.save_path, embeddings)
-        print(vectorstore)
         sample_data = pd.read_csv(args.doc_path, dtype=str)
     except Exception as e:
-        print(e)
         text_splitter = RecursiveCharacterTextSplitter.from_huggingface_tokenizer(tokenizer, 
                                                                          chunk_size=300, 
                                                                          chunk_overlap=10)
@@ -127,24 +133,22 @@ def main(args):
         if args.save:
             # If you want to save vectorstore, run python main.py --save
             vectorstore.save_local(args.save_path)
-    print("!!!")
     # Load Prior Arts 
     prior_data = pd.read_csv(args.prior_path,names=['source','target'], dtype=str)
     prior_dict = {} # Key - 쿼리, Value - prior art의 출원번호
-    # print(prior_data)
     # 딕셔너리 만듦
     # Process each line in the data
-    # ToDo: debug
     for i, line in prior_data.iterrows():
         key, value = line['source'], line['target']
         # Append the value to the list of values for this key
         prior_dict.setdefault(key, []).append(value)
     # print(prior_dict)
 
-    print(sample_data.head())
+    recalls = []
+    rrs = []
     for i, row in sample_data.iterrows():
-        print(row['query'], row['labelled_yn'], row['출원번호'], prior_dict.get(row['출원번호'],""))
         if (int(row['query']) == 1) and (int(row['labelled_yn']) == 1):
+            
             patent_dict = dict( 
                 # 특허 번호 따기
                 application_number = str(row['출원번호']), # 출원 번호
@@ -153,25 +157,22 @@ def main(args):
                 abstract = str(row['요약']),
             )
             # patent_dict['abstract'] = text_splitter.create_documents([str(row['요약'])], [{"application_number": str(row['출원번호'])}])
-            docs = vectorstore.similarity_search_with_score(patent_dict['abstract'], k=1000)
-            # if int(row['target']) == 1: # elig gold == 1: 자기자신을 제외해줌
-            docs = [x for x in docs if str(x[0].metadata['application_number']) != str(patent_dict['application_number'])]
-                     
-            recall = calculate_recall(docs, prior_dict[patent_dict['application_number']])
-            print(recall)
-            # mrr = 0
+            docs = vectorstore.similarity_search_with_score(patent_dict['abstract'], k=20)
             
-            # if gold == 0: 위에 것 그냥 쓰면 됨
-            # elig gold == 1: 자기자신을 제외해줌
-            # recall, mrr을 구해야 함
-                # gold의 가장 높은 ranking을 구함 -> 쭉 append
-                # for loop을 다 돌고 나면
-                    # recall: rank<k인 것들의 개수 / 전체 개수
-                    # mrr: 1/rank의 평균
-
-    # for doc in docs:
-    #     print(doc.metadata['application_number'])
-    #     print(doc.page_content)
+            # 자기 자신을 제외 시켜줌 
+            docs = [x for x in docs if str(x[0].metadata['application_number']) != str(patent_dict['application_number'])]
+            
+            recall = calculate_recall(docs, prior_dict[patent_dict['application_number']])
+            recalls.append(recall)
+            
+            rr = calculate_rr(docs, prior_dict[patent_dict['application_number']])
+            rrs.append(rr)
+            
+    average_recall = np.mean(np.array(recalls))
+    mrr = np.nanmean(np.array(rrs))
+    
+    print(f"average recall: {average_recall}")
+    print(f"mrr: {mrr}")
     
 if __name__ == '__main__':
     parser = argparse.ArgumentParser()
