@@ -49,6 +49,7 @@ def main():
         img_file = st.file_uploader('이미지를 업로드 해 주세요.', type=['png', 'jpg', 'jpeg'])
         query = 0
         query = st.text_input('쿼리를 작성해 주세요.')
+
         image_name = 0
 
         if st.button('send'):
@@ -84,6 +85,7 @@ def main():
         st.error('유저명/비밀번호가 틀립니다.')
     elif st.session_state["authentication_status"] == None:
         st.warning('유저명/비밀번호를 작성해 주세요.')
+
 
 
 if __name__ == '__main__':

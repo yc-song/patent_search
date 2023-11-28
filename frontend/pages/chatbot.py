@@ -29,6 +29,7 @@ if number:
 
 
         inputs = {"messages": st.session_state.messages, "number": number}
+
         res = requests.post(f"{url}/api/chat",
                             json=json.dumps(inputs))
         full_response = ""
@@ -42,6 +43,7 @@ if number:
         st.session_state.generated.append(full_response)
         st.session_state.messages.append({"role": "assistant", "content": full_response})
 
+
     if st.session_state['generated']:
         for i in range(len(st.session_state['generated']) - 1, -1, -1):
             message(st.session_state['past'][i], is_user=True, key=str(i) + '_user')
@@ -50,3 +52,4 @@ if number:
 #     st.error('Username/password is incorrect')
 # elif st.session_state["authentication_status"] == None:
 #     st.warning('Please enter your username and password')
+

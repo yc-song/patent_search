@@ -2,3 +2,4 @@ Flask
 streamlit
 streamlit-chat
 watchdog
+streamlit-authenticator

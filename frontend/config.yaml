@@ -1,0 +1,29 @@
+credentials:
+  usernames:
+    choimoonwon:
+      email: yellowbill@snu.ac.kr
+      name: Choi Moonwon
+      password: $2b$12$sBN3iCQcBB9tyw8tNOv7bOek4pJ1XCGHCOrXnko0rE3R1w1idFyti #abc
+    emad:
+      email: miskemad@snu.ac.kr
+      name: Emad Ismael
+      password: $2b$12$DBr6RS0f3w9ppLq0.xSyTujyr4PtnhN.TpRbxGOIAxsFh5Ki/P.PG #def
+    jong:
+      email: hyeongoon11@snu.ac.kr
+      name: jong
+      password: $2b$12$WU86TOlFC80b8ismy28oguEAap2PNLH4xlfrpixaE32Y.EdNSI5AW #ghi
+    songmooho:
+      email: anmh9161@snu.ac.kr
+      name: Song Mooho
+      password: $2b$12$3aIogkyCKz0NiPZwIh8kw.vh370rsy2QHhZwz7XrC9OPHqAn0t2KG #jkl
+    hyeryung:
+      email: hyeryung.son@snu.ac.kr
+      name: Son hyeryung
+      password: $2b$12$8QSm1i8NGBNfl1jPCcqZrukK.p.2WWbL7wSQv.5QSnPtyMfuN.Y3m #mno
+cookie:
+  expiry_days: 0
+  key: random_signature_key # Must be string
+  name: random_cookie_name
+preauthorized:
+  emails:
+  - melsby@gmail.com
