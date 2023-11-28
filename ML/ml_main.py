@@ -1,7 +1,10 @@
 from ML.utils import given_information_determine, load_text_index, load_image_index, load_text_and_image_index
 from ML.distance_search import topk_search_queryEmb
 from ML.clip import embedding
+from ML.RAG import textRAG_from_ids
 
+def ML_RAG_result():
+    results, revised_results = textRAG_from_ids(df, ids, query, max_rows = 3)
 
 def ML_topk_result(query, image_name, FRONT_ENDSYMBOL):
     """
@@ -20,19 +23,22 @@ def ML_topk_result(query, image_name, FRONT_ENDSYMBOL):
     # 입력된 정보의 종류별로 faiss index 파일 추출
     if BothNone:
         multi_modal_mode = False
+        mode = 'None'
         return {"out": [{"summary": "아무런 정보도 입력되지 않았습니다."}]}
     elif textOnly:
         multi_modal_mode = False
         textIndex, imageIndex = load_text_index(), None
+        mode = 'text'
     elif imageOnly:
         multi_modal_mode = False
         textIndex, imageIndex = None, load_image_index()
+        mode = 'image'
     else:
         multi_modal_mode = True
         textIndex, imageIndex = load_text_and_image_index()
+        mode = 'both'
         
-    query_emb = embedding(query, species = 'text')
-    image_emb = embedding(image_name, species = 'image')
+    query_emb, image_emb = embedding(query, image_name, species = mode)
     distances, indices = topk_search_queryEmb(query_emb, image_emb, textIndex, imageIndex, multi_modal_mode=multi_modal_mode)
     
-    
+    return distances, indices
