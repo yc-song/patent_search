@@ -1,4 +1,4 @@
-# Create 'keys.json' file in backend folder consists of following three lines:
+# Create 'keys.json' file in ML folder consists of following three lines:
 # {
 #     "OpenAI_API_KEY":"your openai api key"
 # }
