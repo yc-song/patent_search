@@ -6,8 +6,8 @@
 import os, json
 import pandas as pd
 from langchain_experimental.agents.agent_toolkits.csv.base import create_pandas_dataframe_agent
-from langchain.llms import OpenAI
-from langchain.text_splitter import RecursiveCharacterTextSplitter
+# from langchain.llms import OpenAI
+# from langchain.text_splitter import RecursiveCharacterTextSplitter
 from langchain.prompts import PromptTemplate
 from langchain.chat_models import ChatOpenAI
 from langchain.agents import AgentType
