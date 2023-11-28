@@ -23,7 +23,6 @@ def crawl_one_patent(driver: webdriver, patent_id: str, out_path: str = "crawled
     os.makedirs(os.path.join(out_path, patent_id), exist_ok=True)
     
     patent_id_for_search = f"KR{patent_id}"
-        
     driver.get(f'https://patents.google.com/patent/{patent_id_for_search}')
     wait = WebDriverWait(driver, 30)
     action = ActionChains(driver)
@@ -89,7 +88,7 @@ def crawl_one_patent(driver: webdriver, patent_id: str, out_path: str = "crawled
 if __name__ == "__main__":
     
     ## set path to patent_search repository
-    os.chdir('/Users/hayley/Documents/p4ds/patent_search') #CHANGE THIS LINE
+    os.chdir('./') #CHANGE THIS LINE
     
     ## read data
     patent_data = pd.read_csv('data_collection/extracted_data_formatted.csv', index_col=0, dtype=str) ## CHANGE THIS LINE
@@ -99,13 +98,13 @@ if __name__ == "__main__":
     
     options = Options()
     # options.add_argument("--headless=new")
-    test_driver = webdriver.Chrome(options=options)#'/path/to/driver'  # Optional argument, if not specified will search path.
+    test_driver = webdriver.Chrome('C:/Users/hyeon/patent_search/patent_search/data_collection/chromedriver-win64/chromedriver.exe', options = options)#'/path/to/driver'  # Optional argument, if not specified will search path.
     
-    os.makedirs('data_collection/crawled_images', exist_ok=True)
-    already_crawled_list = os.listdir('data_collection/crawled_images')
+    # os.makedirs('data_collection/crawled_images', exist_ok=True)
     found_count = 0
+    already_crawled_list = os.listdir('data_collection/crawled_images')
     
-    for patent_number in tqdm(patent_list):
+    for patent_number in tqdm(patent_list[1000:]):
         
         if patent_number[:9] in already_crawled_list:
             found_count += 1
