@@ -37,18 +37,19 @@ def save_uploaded_file(directory, file):
 
 # 기본 형식
 def main():
-    name, authentication_status, username = authenticator.login('Login', 'main')
+    name, authentication_status, username = authenticator.login('로그인', 'main')
     if st.session_state["authentication_status"]:
-        authenticator.logout('Logout', 'main')
-        st.title('Patent Search Engine')
+        authenticator.logout('로그아웃', 'main')
+        st.title('특허 검색 엔진')
 
-        st.subheader('We support the following:')
-        st.markdown("1. Searching for similar patents through drawings.\n"
-                    "2. Patent search based on descriptions or keywords.\n"
-                    "3. A combination of 1 and 2.")
-        img_file = st.file_uploader('Please upload an image.', type=['png', 'jpg', 'jpeg'])
+        st.subheader('다음과 같은 기능을 제공합니다. :')
+        st.markdown("1. 도면을 기준으로 비슷한 특허를 찾습니다.\n"
+                    "2. 키워드나 설명을 기준으로 비슷한 특허를 찾습니다.\n"
+                    "3. 도면과 키워드를 둘 다 참고하여 비슷한 특허를 찾습니다.")
+        img_file = st.file_uploader('이미지를 업로드 해 주세요.', type=['png', 'jpg', 'jpeg'])
         query = 0
-        query = st.text_input('Type your question')
+        query = st.text_input('쿼리를 작성해 주세요.')
+
         image_name = 0
 
         if st.button('send'):
@@ -73,14 +74,18 @@ def main():
 
             output = requests.get(f"{url}/api/data",
                                   params={"image_name": image_name, "query": query}).json()
-            st.header("Results")
+            st.header("결과")
+            i = 1
             for output in output['out']:
+                st.header(i)
+                i += 1
                 st.markdown(output['summary'])
                 st.image(output['image'])
     elif st.session_state["authentication_status"] == False:
-        st.error('Username/password is incorrect')
+        st.error('유저명/비밀번호가 틀립니다.')
     elif st.session_state["authentication_status"] == None:
-        st.warning('Please enter your username and password')
+        st.warning('유저명/비밀번호를 작성해 주세요.')
+
 
 
 if __name__ == '__main__':
