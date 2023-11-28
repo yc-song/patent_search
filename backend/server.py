@@ -1,21 +1,30 @@
 ##########################################################
 # to run: python server.py
 ##########################################################
-import json
+import json, random
 import openai
 from flask import Flask, render_template, request, redirect, session, jsonify
+import pandas as pd
 import os.path
+from ML.RAG import textRAG_from_ids
 
 app = Flask(__name__)
 openai.api_key = "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"
 
 FRONT_ENDSYMBOL = '0'
+data = pd.read_csv('data_preprocess/extracted_data_formatted_merged.csv')
+ids = [random.choice(range(len(data))) for _ in range(10)]
+
 
 
 @app.route("/api/data", methods=['GET'])
 def data():
     image_name = request.args.get("image_name")
     query = request.args.get("query")
+    
+    # model embedding을 이용하여 top-k candidates 뽑기
+    
+    
     if os.path.isfile(image_name):
         print(image_name)
         print(query)
@@ -37,18 +46,26 @@ def my_api():
     Returns:
         JSON: A JSON object containing the input text and the predicted tags.
     """
+    
+    data = pd.read_csv('data_preprocess/extracted_data_formatted_merged.csv')
+    ids = [random.choice(range(len(data))) for _ in range(10)]
     request_data = json.loads(request.json)
     print(request_data.get("number"))
-    print(request_data.get("messages"))
-    response = openai.ChatCompletion.create(
-        model="gpt-3.5-turbo",
-        messages=request_data.get("messages")
-    )
+    our_id = ids[request_data.get("number")]
+    # print(request_data.get("messages"))
+    # response = openai.ChatCompletion.create(
+    #     model="gpt-3.5-turbo",
+    #     messages=request_data.get("messages")
+    # )
 
+    # data = {
+    #     "response": response.choices[0]["message"]["content"] # value is just string.
+    # }
+
+    result = textRAG_from_ids(data, [our_id, our_id], user_query = request_data)[0] # str
     data = {
-        "response": response.choices[0]["message"]["content"]
+        "response": result
     }
-
     return jsonify(data)
 
 

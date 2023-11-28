@@ -173,5 +173,5 @@ html/
 # **/*.xlsx
 **/*.csv
 # API KEY
-backend/keys.json
+backend/ML/keys.json
 ML/keys.json
