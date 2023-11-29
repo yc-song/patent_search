@@ -108,7 +108,7 @@ emb = {}
 
 #read all image names
 #Extract embeddings and store them in the emb variable
-for i, text in tqdm(enumerate(all_chunks)):
+for i, text in tqdm(enumerate(all_chunks), total=len(all_chunks)):
     with torch.no_grad():
         # text = tokenizer([text], max_length=1000, truncation=True, padding="max_length", return_tensors="np")
         text_features = model.encode(text)
@@ -119,17 +119,19 @@ for i, text in tqdm(enumerate(all_chunks)):
 
 #Create Faiss index using FlatL2 type. 512 is the number of dimensions of each vectors
 index = faiss.IndexFlatL2(512)
-#Convert embeddings and add them to the index
-for key in tqdm(emb):
-    #Convert to numpy
-    #Convert to float32 numpy
-    vector = np.float32(emb[key])
-    #Normalize vector: important to avoid wrong results when searching
-    vector = np.expand_dims(vector, 0)
-    faiss.normalize_L2(vector)
-    #Add to index
-    index.add(vector)
+index = faiss.IndexIDMap2(index)
+index.add_with_ids(np.array(list(emb.values())), np.array(list(emb.keys())))
+# #Convert embeddings and add them to the index
+# for key in tqdm(emb, total=len(emb)):
+#     #Convert to numpy
+#     #Convert to float32 numpy
+#     vector = np.float32(emb[key])
+#     #Normalize vector: important to avoid wrong results when searching
+#     vector = np.expand_dims(vector, 0)
+#     faiss.normalize_L2(vector)
+#     #Add to index
+#     index.add(vector)
 
-print("!!!")
+# print("!!!")
 #Store the index locally
 faiss.write_index(index,"./data_preprocess/vector_text.index")
