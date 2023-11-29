@@ -6,15 +6,18 @@ import openai
 from flask import Flask, render_template, request, redirect, session, jsonify
 import pandas as pd
 import os.path
-from ML.RAG import textRAG_from_ids
+from sentence_transformers import SentenceTransformer
+from transformers import AutoProcessor, AutoModel
+
+from backend.ML.RAG import textRAG_from_ids
+from backend.ML.ml_main import ML_topk_result
 
 app = Flask(__name__)
 openai.api_key = "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"
 
-FRONT_ENDSYMBOL = '0'
-data = pd.read_csv('data_preprocess/extracted_data_formatted_merged.csv')
 ids = [random.choice(range(len(data))) for _ in range(10)]
-
+text_model = SentenceTransformer('sentence-transformers/clip-ViT-B-32-multilingual-v1')
+image_model = SentenceTransformer('clip-ViT-B-32')
 
 
 @app.route("/api/data", methods=['GET'])
@@ -22,12 +25,17 @@ def data():
     image_name = request.args.get("image_name")
     query = request.args.get("query")
     
+    FRONT_ENDSYMBOL = '0'
     # model embedding을 이용하여 top-k candidates 뽑기
+    distances, indices = ML_topk_result(query, image_name, FRONT_ENDSYMBOL, (text_model, image_model), koclip = False)
     
-    
+    distances = distances[0]
+    indices = indices[0]
     if os.path.isfile(image_name):
         print(image_name)
         print(query)
+        
+    
     return {"out": [{
                         "summary": "본 발명은 쿠션부재의 표면에 착용자의 신체조건에 맞는 보조패드를 부착하여 손목의 접힘각도를 조절하고, 그에 따라 볼 회전력을 증가시킬 수 있게 하고 볼 컨트롤을 보다 자유롭게 구사할 수 있게 한 볼링용 손목보호대의 보조패드에 관한 것이다.",
                         "image": "../backend/image/1-1.png"},
@@ -47,7 +55,7 @@ def my_api():
         JSON: A JSON object containing the input text and the predicted tags.
     """
     
-    data = pd.read_csv('data_preprocess/extracted_data_formatted_merged.csv')
+    data = pd.read_csv('data_preprocess/extracted_data_formatted.csv')
     ids = [random.choice(range(len(data))) for _ in range(10)]
     request_data = json.loads(request.json)
     print(request_data.get("number"))

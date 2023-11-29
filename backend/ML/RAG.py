@@ -3,7 +3,7 @@
 #     "OpenAI_API_KEY":"your openai api key"
 # }
 
-import os, json
+import os, json, re
 import pandas as pd
 from langchain_experimental.agents.agent_toolkits.csv.base import create_pandas_dataframe_agent
 # from langchain.llms import OpenAI
@@ -15,15 +15,15 @@ from langchain.agents.tools import Tool
 from langchain.memory import ConversationBufferMemory
 from langchain.chains import ConversationChain
 
-
-with open("keys.json", 'r') as f:
+with open("backend/ML/keys.json", 'r') as f:
     keys = json.load(f)
 OPENAI_API_KEY = keys["OPENAI_API_KEY"]
 os.environ["OPENAI_API_KEY"] = OPENAI_API_KEY
 
 def textRAG_from_ids(df, ids, user_query, max_rows = 3):
     ids = list(set(ids))
-    minimized_df = df[['출원번호','요약']].iloc[ids].reset_index()
+    minimized_df = df[['출원번호','요약', '발명의명칭(국문)', '청구항']].iloc[ids].reset_index()
+    minimized_df = preprocess_df(minimized_df)
     # print("minimized_df:")
     # print(minimized_df)
     max_rows = max_rows
@@ -34,10 +34,9 @@ def textRAG_from_ids(df, ids, user_query, max_rows = 3):
     너의 데이터베이스는 특허 파일이야.
     아래의 내용을 참고하여 질문에 답해줘
     {user_query}
-
     """
     prompt_template = PromptTemplate.from_template(prompt_developers_template)
-            
+
     for i, chunk in enumerate(chunks):
 
         agent = create_pandas_dataframe_agent(
@@ -55,7 +54,7 @@ def textRAG_from_ids(df, ids, user_query, max_rows = 3):
 
         results.append(result)
         # print(f"chunk {i+1} of {len(chunks)} ended.")
-        
+
     # revised_result = revise_result(results)
     return results
 
@@ -69,11 +68,10 @@ def textRAG_from_one_id_detail(df, id, user_query):
     너의 데이터베이스는 특허 데이터야.
     아래의 내용을 참고하여 질문에 답해줘
     {user_query}
-
     원하는 내용이 없다면 대답하지 않아도 돼.
     """
     prompt_template = PromptTemplate.from_template(prompt_developers_template)
-            
+
     for i, chunk in enumerate(chunks):
 
         agent = create_pandas_dataframe_agent(
@@ -91,7 +89,7 @@ def textRAG_from_one_id_detail(df, id, user_query):
 
         results.append(result)
         # print(f"chunk {i+1} of {len(chunks)} ended.")
-        
+
     # revised_result = revise_result(results)
     return results
 
@@ -103,15 +101,15 @@ def chunk_data_frame(df, chunk_size):
     for i in range(num_chunks):
 
         yield df[i * chunk_size:(i + 1) * chunk_size]
-        
+
 def chunk_oneRow_data_frame(df):
     chunks = []
     for i in range(len(df.columns)):
         if len(str(df.iloc[0,i])) < 10:
             chunks.append(pd.DataFrame(df.iloc[0:1, i]))
     return chunks
-    
-        
+
+
 def revise_result(results):
     revised = {}
     for r in results:
@@ -123,7 +121,7 @@ def revise_result(results):
 def extract_id(text):
     start = text.find('출원번호') + 3
     num_start = start
-    
+
     # extract the starting point of id
     while True:
         try:
@@ -131,7 +129,7 @@ def extract_id(text):
             break            
         except:
             num_start +=1
-            
+
     num_end = num_start
     # extract the end point of id
     while True:
@@ -140,7 +138,7 @@ def extract_id(text):
             num_end +=1
         except:
             break
-    
+
     return int(text[num_start:num_end])
 
 def individual_chatRAG2(df, id, user_query, agent = None, history = []):
@@ -179,9 +177,44 @@ def individual_chatRAG2(df, id, user_query, agent = None, history = []):
 
     response = agent.run(user_query)
     print("response:", response)
-    
+
     return response, agent
 
+def preprocess_df(df):
+    if '청구항' not in df.columns:
+        return df
+
+    nrow, ncol = df.shape
+    for r in range(nrow):
+        claim_text = df.loc[r, '청구항']
+        df.loc[r, '청구항'] = claim_text_process(claim_text)
+
+    return df
+
+def claim_text_process(text):
+    # 1. replace parenthesis part into empty string.
+    text = replace_enclosed_integers(text)
+    text = truncate_sentence(text)
+    return text
+
+
+def replace_enclosed_integers(text):
+    # Define a regular expression pattern to match integers enclosed in small parenthesis
+    pattern = r'\((\d+)\)'
+
+    # Use re.sub to find all matches and replace them with a specific string (e.g., 'REPLACEMENT_STRING')
+    replaced_text = re.sub(pattern, '', text)
+
+    return replaced_text
+
+def truncate_sentence(sentence):
+    # Split the sentence into words
+    words = sentence.split()
+
+    # Consider up to the first 1000 words
+    truncated_sentence = ' '.join(words[:700])
+
+    return truncated_sentence
 
 def individual_chatRAG(df, id, user_query, agent = None, history = []):
     if agent == None:
@@ -203,5 +236,5 @@ def individual_chatRAG(df, id, user_query, agent = None, history = []):
 
     response = agent.run(user_query)
     print("response:", response)
-    
+
     return history, agent
