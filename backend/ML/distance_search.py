@@ -55,12 +55,16 @@ def distance_search(query_emb, index, k=20, single_mode = False):
     
     if len(query_emb.shape) ==1:
         query_emb = query_emb.reshape(1, -1)
-    # if 'tensor' in str(type(query_emb)):
-    #     query_emb = query_emb.detach().numpy()
+    if 'numpy' not in str(type(query_emb)):
+        query_emb = query_emb.detach().numpy()
     # else:
     #     if not single_mode:
             # raise f"please give consistent information.\nCurrently, query_emb.shape={query_emb.shape} and single_mode={True}"
-    distances, indices = index.search(query_emb.reshape(1, -1).detach().numpy(), k)
+    print("query_emb:")
+    print(f"type: {type(query_emb)}")
+    print(f"shape: {query_emb.shape}")
+    print(f"info: {query_emb}")
+    distances, indices = index.search(query_emb.reshape(1, -1), k)
     distances = [list(d) for d in distances]
     indices = [list(d) for d in indices]
     if single_mode:
