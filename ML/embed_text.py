@@ -23,15 +23,16 @@ os.chdir('./')
 
 # Load the model
 device = "cuda" if torch.cuda.is_available() else "cpu"
+print(f"device: {device}")
 # Download the dataset
 patent_chunk_dicts=[]
-sample_data = pd.read_csv("./text/debug.csv")
+sample_data = pd.read_csv("./text/patent_data_text_final.csv")
 text_columns = ['청구항', '발명의 명칭', '기술분야', '배경기술','선행기술문헌',	'발명의 내용'\
 	,'해결하려는 과제',	'과제의 해결 수단',	'발명의 효과', '도면의 간단한 설명', '발명을 실시하기 위한 구체적인 내용', '요약']
 
 tokenizer = AutoTokenizer.from_pretrained("openai/clip-vit-base-patch32", use_fast=True)
 text_splitter = CharacterTextSplitter.from_huggingface_tokenizer(tokenizer, chunk_size=300, chunk_overlap=10)
-for i, row in sample_data.iterrows():
+for i, row in tqdm(sample_data.iterrows()):
         patent_dict = dict( 
             # 특허 번호 따기
             application_number = str(row['출원번호']), # 출원 번호
@@ -111,13 +112,15 @@ for i, text in tqdm(enumerate(all_chunks)):
     with torch.no_grad():
         # text = tokenizer([text], max_length=1000, truncation=True, padding="max_length", return_tensors="np")
         text_features = model.encode(text)
-        emb_key = number_chunks[i]
+        emb_key = number_chunks_new[i]
         emb[emb_key] = text_features
+
+# print(emb)
 
 #Create Faiss index using FlatL2 type. 512 is the number of dimensions of each vectors
 index = faiss.IndexFlatL2(512)
 #Convert embeddings and add them to the index
-for key in emb:
+for key in tqdm(emb):
     #Convert to numpy
     #Convert to float32 numpy
     vector = np.float32(emb[key])
@@ -127,5 +130,6 @@ for key in emb:
     #Add to index
     index.add(vector)
 
+print("!!!")
 #Store the index locally
 faiss.write_index(index,"./data_preprocess/vector_text.index")
