@@ -42,7 +42,7 @@ def main():
         authenticator.logout('로그아웃', 'main')
         st.title('특허 검색 엔진')
 
-        st.subheader('다음과 같은 기능을 제공합니다. :')
+        st.subheader('다음과 같은 기능을 제공합니다 :')
         st.markdown("1. 도면을 기준으로 비슷한 특허를 찾습니다.\n"
                     "2. 키워드나 설명을 기준으로 비슷한 특허를 찾습니다.\n"
                     "3. 도면과 키워드를 둘 다 참고하여 비슷한 특허를 찾습니다.")
@@ -77,10 +77,20 @@ def main():
             st.header("결과")
             i = 1
             for output in output['out']:
-                st.header(i)
+                st.header(f'유사특허 {str(i)}')
                 i += 1
+                st.subheader('출원번호:')
+                st.markdown(output['chulwon_num'])
+                st.subheader('이미지:')
+                st.image(output['image'], width=300)
+                st.subheader('요약:')
                 st.markdown(output['summary'])
-                st.image(output['image'])
+                
+                chul = output['chulwon_num']
+                link = f"[kipris 링크](http://kpat.kipris.or.kr/kpat/{chul}.pdf?method=fullText&applno={chul}&pub_reg=R&fileKind=undefined)"
+                print("link in front:", link)
+                st.subheader('링크')
+                st.write(link)
     elif st.session_state["authentication_status"] == False:
         st.error('유저명/비밀번호가 틀립니다.')
     elif st.session_state["authentication_status"] == None:

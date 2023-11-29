@@ -72,16 +72,44 @@ def data():
         print(query)
     
     out = {"out":[]}
+    print("curr path:", os.getcwd())
     for i in indices:
         if judge_id_species(i) == 'd':
             df_idx = deunglok_to_dfidx[str(i)]
         elif judge_id_species(i) == 'c':
-            df_idx = chulwon_to_dfidx[str(i)]
+            df_idx = chulwon_to_dfidx.get(str(i)[:-2], random.choice(range(500)))
+        chul = dataframe['출원번호'].iloc[int(df_idx)]
         
-        summary = dataframe['요약'][df_idx]
+        # 요약 관련
+        summary = dataframe['요약'].iloc[int(df_idx)]
+        summary_lastdot = summary.rfind('.')
+        summary = summary[:summary_lastdot]
+        if len(summary.split()) < 20:
+            continue
+
+        # 이미지 관련
+        # backend/images/sample 폴더 안에 여러 이미지들을 넣어둬야 함.
+        # bacnend/images/출원번호/이미지들... 구조로 이미지를 저장해둬야 함.
+        image_path = os.path.join("backend", "image", str(chul))
+        selected_image = None
+        
+        if os.path.exists(image_path):
+            image_list = os.listdir(image_path)
+            if len(image_list) != 0:
+                for i in image_list:
+                    if '1' in i:
+                        selected_image = i
+                        break
+        if selected_image == None:
+            image_path = os.path.join("backend", "image", "sample")
+            image_list = os.listdir(image_path)
+            selected_image = random.choice(image_list)
+        selected_image_path = os.path.join("..",image_path, selected_image)        
+        # print("selected_image_path:", selected_image_path)    
         out["out"].append({
             "summary":summary,
-            "image": "../backend/image/1-1.png"
+            "image": selected_image_path,
+            "chulwon_num":str(chul)
         })
     print("search output calculated.")
     return out
