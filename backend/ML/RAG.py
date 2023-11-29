@@ -22,7 +22,7 @@ os.environ["OPENAI_API_KEY"] = OPENAI_API_KEY
 
 def textRAG_from_ids(df, ids, user_query, max_rows = 3):
     ids = list(set(ids))
-    minimized_df = df[['출원번호','요약', '발명의명칭(국문)', '청구항']].iloc[ids].reset_index()
+    minimized_df = df[['출원번호','요약', '청구항']].iloc[ids].reset_index()
     minimized_df = preprocess_df(minimized_df)
     # print("minimized_df:")
     # print(minimized_df)

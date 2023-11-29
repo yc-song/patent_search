@@ -43,9 +43,8 @@ def main():
         st.title('특허 검색 엔진')
 
         st.subheader('다음과 같은 기능을 제공합니다 :')
-        st.markdown("1. 도면을 기준으로 비슷한 특허를 찾습니다.\n"
-                    "2. 키워드나 설명을 기준으로 비슷한 특허를 찾습니다.\n"
-                    "3. 도면과 키워드를 둘 다 참고하여 비슷한 특허를 찾습니다.")
+        st.markdown("1. 키워드나 설명을 기준으로 비슷한 특허를 찾습니다: 이미지를 입력하지 않고 텍스트 질문만 입력합니다.\n"
+                    "2. 도면과 키워드를 둘 다 참고하여 비슷한 특허를 찾습니다: 이미지와 텍스트 질문을 모두 입력합니다.")
         img_file = st.file_uploader('이미지를 업로드 해 주세요.', type=['png', 'jpg', 'jpeg'])
         query = 0
         query = st.text_input('쿼리를 작성해 주세요.')
@@ -68,12 +67,15 @@ def main():
                 # 파일 명에 특정 특수문자가 들어가면 만들수 없다.
                 filename = current_time.isoformat().replace(':', "_") + '.jpg'
                 img_file.name = filename
-                image_name = f'../frontend/image/{img_file.name}'
+                image_name = f'frontend/image/{img_file.name}'
+                # image_name = os.path.join("..","backend",'image', str(img_file.name))
+                print("image_name:", image_name)
 
                 save_uploaded_file('image', img_file)
 
             output = requests.get(f"{url}/api/data",
-                                  params={"image_name": image_name, "query": query}).json()
+                                params={"image_name": image_name, 
+                                        "query": query}).json()
             st.header("결과")
             i = 1
             for output in output['out']:
@@ -82,7 +84,10 @@ def main():
                 st.subheader('출원번호:')
                 st.markdown(output['chulwon_num'])
                 st.subheader('이미지:')
-                st.image(output['image'], width=300)
+                if 'noimage' not in output['image']:
+                    st.image(output['image'], width=300)
+                else:
+                    st.markdown('[이미지 없음]')
                 st.subheader('요약:')
                 st.markdown(output['summary'])
                 
