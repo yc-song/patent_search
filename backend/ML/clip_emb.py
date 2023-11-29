@@ -1,12 +1,11 @@
 from PIL import Image
 # import requests
-import torch
+import torch, os
 import torch.nn.functional as F
 from langchain.text_splitter import RecursiveCharacterTextSplitter, CharacterTextSplitter, TokenTextSplitter
 import pandas as pd
 import argparse
 
-from modeling.main import aggregate_chunks, average_pool
 
 
 def embedding(query, image_path, species, model, processor):
@@ -50,9 +49,12 @@ def embedding(query, image_path, species, model, processor):
 
 def embedding_text(query, model):
     
+    print("embedding_text. query:", query)
     docs_for_embed = chunk_text(query)
+    print("docs_for_emb", docs_for_embed)
     if len(docs_for_embed)>1:
         docs_for_embed = docs_for_embed[:-1]
+    
     print(f"docs_for_embed[0]:{docs_for_embed[0]}")
     print(f"docs_for_embed[-1]:{docs_for_embed[-1]}")
     
@@ -63,6 +65,8 @@ def embedding_text(query, model):
     return outputs
 
 def embedding_image(image_path, model):
+    if not os.path.isfile(image_path):
+        return torch.tensor([1])
     image = Image.open(image_path)
     outputs = model.encode(image) # shape (,512)
 
@@ -82,7 +86,11 @@ def chunk_text(sentence, chunk_size = 200, overlap = 10):
     end = 0
     result = []
     splitted = sentence.split()
+    
     total_words = len(splitted)
+    if total_words == 1:
+        return splitted
+    
     while end < total_words-1:
         end = start + chunk_size
         sentence_list = splitted[start:end]

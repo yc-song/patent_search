@@ -1,6 +1,6 @@
-from backend.ML.utils import given_information_determine, load_text_index, load_image_index, load_text_and_image_index
-from backend.ML.distance_search import topk_search_queryEmb
-from backend.ML.clip_emb import embedding, embedding_text, embedding_image
+from ML.utils import given_information_determine, load_text_index, load_image_index, load_text_and_image_index
+from ML.distance_search import topk_search_queryEmb
+from ML.clip_emb import embedding, embedding_text, embedding_image
 # from RAG import textRAG_from_ids
 
 # def ML_RAG_result():
@@ -38,7 +38,7 @@ def ML_topk_result(query, image_name, FRONT_ENDSYMBOL, model, processor = None, 
         query_emb = embedding_text(query, model[0]).reshape(1, -1)
         image_emb = embedding_image(image_name, model[1]).reshape(1, -1)
     print(f"query_emb shape:{query_emb.shape}")
-    print(f"image_emb shape:{image_emb.shape}")
+    print(f"image_emb:{image_emb}")
     
     distances, indices = topk_search_queryEmb(query_emb, image_emb, textIndex, imageIndex, multi_modal_mode=multi_modal_mode)
 

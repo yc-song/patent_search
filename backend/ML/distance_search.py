@@ -63,8 +63,9 @@ def distance_search(query_emb, index, k=20, single_mode = False):
     print("query_emb:")
     print(f"type: {type(query_emb)}")
     print(f"shape: {query_emb.shape}")
-    print(f"info: {query_emb}")
+    # print(f"info: {query_emb}")
     distances, indices = index.search(query_emb.reshape(1, -1), k)
+    print("index search complete.")
     distances = [list(d) for d in distances]
     indices = [list(d) for d in indices]
     if single_mode:

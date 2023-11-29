@@ -9,39 +9,82 @@ import os.path
 from sentence_transformers import SentenceTransformer
 from transformers import AutoProcessor, AutoModel
 
-from backend.ML.RAG import textRAG_from_ids
-from backend.ML.ml_main import ML_topk_result
+from ML.RAG import textRAG_from_ids
+from ML.ml_main import ML_topk_result
 
 app = Flask(__name__)
 openai.api_key = "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"
+global dataframe
+global ids
+global distances
+global indices
+global deunglok_to_dfidx
+global chulwon_to_dfidx
+def from_deunglok_to_dfidx(dataframe):
+    out = {}
+    deung = dataframe['등록번호']
+    for i, d in enumerate(deung):
+        try:
+            out[str(int(d))] = str(i)
+        except:
+            continue
+    return out
 
-ids = [random.choice(range(len(data))) for _ in range(10)]
+def from_chulwon_to_dfidx(dataframe):
+    out = {}
+    chulwon = dataframe['출원번호']
+    for i, d in enumerate(chulwon):
+        try:
+            out[str(int(d))] = str(i)
+        except:
+            continue
+    return out
+
+dataframe = pd.read_csv('data_preprocess/extracted_data_formatted.csv')
+distances, indices = None, None
+print("model load start.")
 text_model = SentenceTransformer('sentence-transformers/clip-ViT-B-32-multilingual-v1')
 image_model = SentenceTransformer('clip-ViT-B-32')
+print("model load end.")
+deunglok_to_dfidx = from_deunglok_to_dfidx(dataframe)
+chulwon_to_dfidx = from_chulwon_to_dfidx(dataframe)
 
 
 @app.route("/api/data", methods=['GET'])
 def data():
+    global distances
+    global indices
+    global deunglok_to_dfidx
+    global chulwon_to_dfidx
+    
     image_name = request.args.get("image_name")
     query = request.args.get("query")
     
     FRONT_ENDSYMBOL = '0'
     # model embedding을 이용하여 top-k candidates 뽑기
+    print("----------topk search start----------")
     distances, indices = ML_topk_result(query, image_name, FRONT_ENDSYMBOL, (text_model, image_model), koclip = False)
-    
+    print("----------topk search complete----------")
     distances = distances[0]
     indices = indices[0]
     if os.path.isfile(image_name):
         print(image_name)
         print(query)
-        
     
-    return {"out": [{
-                        "summary": "본 발명은 쿠션부재의 표면에 착용자의 신체조건에 맞는 보조패드를 부착하여 손목의 접힘각도를 조절하고, 그에 따라 볼 회전력을 증가시킬 수 있게 하고 볼 컨트롤을 보다 자유롭게 구사할 수 있게 한 볼링용 손목보호대의 보조패드에 관한 것이다.",
-                        "image": "../backend/image/1-1.png"},
-                    {
-                        "summary": "본 개시에 따른 기술적 사상은 훈련간 스마트워치 및 훈련 인원의 손목을 동시에 보호할 수 있도록 소정의 영역 에 스마트워치의 시간을 볼 수 있도록 구멍이 형성된 보호대, 상기 보호대의 상부 및 상기 구멍에 인접한 위치에 구비되며, 스마트워치에 표시된 시간을 볼 수 있도록 열고 닫힘을 수행할 수 있도록 뚜껑과 본체를 포함하는 보 호캡 및 복수의 결합부재들 중 적어도 일부가 서로 결합되어 스마트워치 및 손목을 보호할 수 있도록 구비된 결 합부를 포함하는 스마트워치 손목보호대에 관한 것이다.",
-                        "image": "../backend/image/1-2.png"}]}
+    out = {"out":[]}
+    for i in indices:
+        if judge_id_species(i) == 'd':
+            df_idx = deunglok_to_dfidx[str(i)]
+        elif judge_id_species(i) == 'c':
+            df_idx = chulwon_to_dfidx[str(i)]
+        
+        summary = dataframe['요약'][df_idx]
+        out["out"].append({
+            "summary":summary,
+            "image": "../backend/image/1-1.png"
+        })
+    print("search output calculated.")
+    return out
 
 
 @app.route("/api/chat", methods=['POST'])
@@ -54,9 +97,14 @@ def my_api():
     Returns:
         JSON: A JSON object containing the input text and the predicted tags.
     """
-    
-    data = pd.read_csv('data_preprocess/extracted_data_formatted.csv')
-    ids = [random.choice(range(len(data))) for _ in range(10)]
+    global ids
+    global distances
+    global indices
+    global dataframe
+    print(indices)
+    if indices == None:
+        return { "response": "Chatbot을 사용하기 이전에, Search 탭에서 먼저 원하는 쿼리를 입력해주세요. Search 탭에서의 검색이 끝나면 Chatbot을 사용할 수 있습니다. Chatbot은 Search된 특허 후보를 바탕으로 조금 더 자세한 대화를 제공합니다." }
+    ids = [i+1 for i in range(len(indices))]
     request_data = json.loads(request.json)
     print(request_data.get("number"))
     our_id = ids[request_data.get("number")]
@@ -70,12 +118,17 @@ def my_api():
     #     "response": response.choices[0]["message"]["content"] # value is just string.
     # }
 
-    result = textRAG_from_ids(data, [our_id, our_id], user_query = request_data)[0] # str
+    result = textRAG_from_ids(dataframe, [our_id], user_query = request_data)[0] # str
     data = {
         "response": result
     }
     return jsonify(data)
 
+def judge_id_species(i):
+    if str(i).endswith('0000'):
+        return 'd'
+    else:
+        return 'c'
 
 if __name__ == "__main__":
     app.run(debug=True)
