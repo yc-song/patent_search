@@ -55,10 +55,14 @@ def distance_search(query_emb, index, k=20, single_mode = False):
     
     if len(query_emb.shape) ==1:
         query_emb = query_emb.reshape(1, -1)
-    else:
-        if not single_mode:
-            raise f"please give consistent information.\nCurrently, query_emb.shape={query_emb.shape} and single_mode={True}"
-    distances, indices = index.search(query_emb.reshape(1, -1), k)
+    # if 'tensor' in str(type(query_emb)):
+    #     query_emb = query_emb.detach().numpy()
+    # else:
+    #     if not single_mode:
+            # raise f"please give consistent information.\nCurrently, query_emb.shape={query_emb.shape} and single_mode={True}"
+    distances, indices = index.search(query_emb.reshape(1, -1).detach().numpy(), k)
+    distances = [list(d) for d in distances]
+    indices = [list(d) for d in indices]
     if single_mode:
         distances = distances[0]
         indices = indices[0]
@@ -66,26 +70,50 @@ def distance_search(query_emb, index, k=20, single_mode = False):
 
 
 def multi_distance_search_result_gatherting(distances, indices, single_mode = False):
-    final_distance, final_indices = [[] for _ in len(distances)], [[] for _ in len(indices)]
+    # print("distances")
+    # print(distances)
+    # print("indices")
+    # print(indices)
+    # print("--------------")
     
-    for distance_source in distances:
+    final_distance, final_indices = [[] for _ in range(len(distances))], [[] for _ in range(len(indices))]
+    
+    for f, distance_source in enumerate(distances):
         for e, dist in enumerate(distance_source):
-            final_distance[e].append(dist)
-            
-    for index_source in indices:
+            final_distance[f].append(dist)
+
+    for f, index_source in enumerate(indices):
         for e, idx in enumerate(index_source):
-            final_indices[e].append(idx)
+            final_indices[f].append(idx)
+    # print("final_indices")
+    # print(final_indices)
+    # print("final_distance")
+    # print(final_distance)
             
-    gathered = [[] for _ in len(distances)]
+    gathered = [[] for _ in range(len(distances))]
     for queryidx, g in enumerate(gathered):
-        for dataidx, data in enumerate(g):
-            data.append((final_distance[queryidx][dataidx], final_indices[queryidx][dataidx]))
-        g.sort(key = lambda x:x[0])
+        for dataidx, data in enumerate(final_distance[queryidx]):
+            gathered[queryidx].append((final_distance[queryidx][dataidx], final_indices[queryidx][dataidx]))
+        # print(f"gathered[queryidx]={gathered[queryidx]}")
+        # gathered[queryidx].sort(key = lambda x:x[0])
+
+    # print(f"len(gathered):{len(gathered)}")
+    # print(f"len(gathered[0]):{len(gathered[0])}")
+    # print(f"gathered[0]: {gathered[0]}")
+    # print("gathered:")
+    # print(gathered)
     
-    final_distance, final_indices = [[] for _ in len(distances)], [[] for _ in len(indices)]
-    final_distance = [[g[i][j][0] for j in range(len(g[i]))] for i in range(len(gathered))]        
-    final_indices = [[g[i][j][1] for j in range(len(g[i]))] for i in range(len(gathered))]        
-    
+    tmp_final_distance = [[gathered[i][j][0] for j in range(len(gathered[i]))] for i in range(len(gathered))]        
+    tmp_final_indices = [[gathered[i][j][1] for j in range(len(gathered[i]))] for i in range(len(gathered))]   
+    final_distance, final_indices = [[]], [[]]
+    for t in tmp_final_distance:
+        final_distance[0].extend(list(t[0])) 
+    for t in tmp_final_indices:
+        final_indices[0].extend(list(t[0])) 
+    # print(f"len(final_distance):{len(final_distance)}")
+    # print(f"len(final_distance[0]):{len(final_distance[0])}")
+    # print(f"len(final_indices):{len(final_indices)}")
+    # print(f"len(final_indices[0]):{len(final_indices[0])}")
     if not single_mode:
         return final_distance, final_indices
 

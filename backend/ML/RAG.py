@@ -3,7 +3,7 @@
 #     "OpenAI_API_KEY":"your openai api key"
 # }
 
-import os, json, re
+import os, json
 import pandas as pd
 from langchain_experimental.agents.agent_toolkits.csv.base import create_pandas_dataframe_agent
 # from langchain.llms import OpenAI
@@ -15,15 +15,15 @@ from langchain.agents.tools import Tool
 from langchain.memory import ConversationBufferMemory
 from langchain.chains import ConversationChain
 
-with open("backend/ML/keys.json", 'r') as f:
+
+with open("keys.json", 'r') as f:
     keys = json.load(f)
 OPENAI_API_KEY = keys["OPENAI_API_KEY"]
 os.environ["OPENAI_API_KEY"] = OPENAI_API_KEY
 
 def textRAG_from_ids(df, ids, user_query, max_rows = 3):
     ids = list(set(ids))
-    minimized_df = df[['출원번호','요약', '발명의명칭(국문)', '청구항']].iloc[ids].reset_index()
-    minimized_df = preprocess_df(minimized_df)
+    minimized_df = df[['출원번호','요약']].iloc[ids].reset_index()
     # print("minimized_df:")
     # print(minimized_df)
     max_rows = max_rows
@@ -182,41 +182,6 @@ def individual_chatRAG2(df, id, user_query, agent = None, history = []):
     
     return response, agent
 
-def preprocess_df(df):
-    if '청구항' not in df.columns:
-        return df
-    
-    nrow, ncol = df.shape
-    for r in range(nrow):
-        claim_text = df.loc[r, '청구항']
-        df.loc[r, '청구항'] = claim_text_process(claim_text)
-    
-    return df
-
-def claim_text_process(text):
-    # 1. replace parenthesis part into empty string.
-    text = replace_enclosed_integers(text)
-    text = truncate_sentence(text)
-    return text
-    
-    
-def replace_enclosed_integers(text):
-    # Define a regular expression pattern to match integers enclosed in small parenthesis
-    pattern = r'\((\d+)\)'
-
-    # Use re.sub to find all matches and replace them with a specific string (e.g., 'REPLACEMENT_STRING')
-    replaced_text = re.sub(pattern, '', text)
-    
-    return replaced_text
-
-def truncate_sentence(sentence):
-    # Split the sentence into words
-    words = sentence.split()
-
-    # Consider up to the first 1000 words
-    truncated_sentence = ' '.join(words[:700])
-
-    return truncated_sentence
 
 def individual_chatRAG(df, id, user_query, agent = None, history = []):
     if agent == None:
