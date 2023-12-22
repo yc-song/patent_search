@@ -13,7 +13,7 @@ from ML.RAG import textRAG_from_ids
 from ML.ml_main import ML_topk_result
 
 app = Flask(__name__)
-openai.api_key = "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"
+openai.api_key = "OPENAI_API_KEY"
 global dataframe
 global ids
 global distances
