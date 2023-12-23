@@ -175,3 +175,4 @@ html/
 # API KEY
 backend/ML/keys.json
 ML/keys.json
+.DS_Store
