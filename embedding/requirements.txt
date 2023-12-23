@@ -1,0 +1,9 @@
+#python 3.8 or 3.9
+langchain
+pandas
+numpy
+openpyxl
+transformers
+faiss-cpu
+sentence_transformers
+torch

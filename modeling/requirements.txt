@@ -1,0 +1,11 @@
+#python 3.8 or 3.9
+langchain
+pandas
+numpy
+scipy
+tqdm
+ipykernel
+openpyxl
+transformers
+sentence_transformers
+torch

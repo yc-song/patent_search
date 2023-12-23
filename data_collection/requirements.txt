@@ -1,4 +1,6 @@
 # python 3.9
+numpy
+openpyxl
 selenium 
 # download chromedriver from here https://googlechromelabs.github.io/chrome-for-testing/
 # make sure to either place exe file in /usr/local/bin or some other directories in PATH 
